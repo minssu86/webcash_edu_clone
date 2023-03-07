@@ -1,11 +1,29 @@
 package com.clone.ohouse.dto;
 
 import lombok.Getter;
-import org.springframework.stereotype.Repository;
-@Repository
-@Getter
+import lombok.Setter;
+
 public class UserRequestDto {
 
-    private String name="수혁";
+    @Getter
+    @Setter
+    public static class UserEmail{
+        private String email;
+    }
+
+    @Getter
+    @Setter
+    public static class CheckCode{
+        private String email;
+        private String code;
+    }
+
+    @Getter
+    public static class signup{
+        private String email;
+        private String password;
+        private String nickname;
+        private String token;
+    }
 
 }
