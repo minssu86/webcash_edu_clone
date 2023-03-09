@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * <h1>이메일 인증</h1>
+     * <h1>인증 코드 요청</h1>
      * 이메일을 통해 회원가입을 위한 인증 코드 발급
      * email : String
      */
@@ -25,11 +25,13 @@ public class UserController {
         return userService.sendEmailWithCheckCode(emailDto);
     }
 
+    // 인증 코드 확인
     @PostMapping(path = "code-check")
     public ResponseEntity<?> doConfirmCheckCode(@RequestBody UserRequestDto.CheckCode checkCode){
         return userService.doConfirmCheckCode(checkCode);
     }
 
+    // 회원 가입
     @PostMapping(path = "signup")
     public ResponseEntity<?> addNewUserInfo(@RequestBody UserRequestDto.signup signup){
         return userService.addNewUserInfo(signup);

@@ -11,4 +11,7 @@
               )
     </insert>
 
+<!--    <select id="findByEmail" resultType="com.clone.ohouse.domain.User">-->
+<!--        select * from user-->
+<!--    </select>-->
 </mapper>
