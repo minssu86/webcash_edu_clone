@@ -4,8 +4,8 @@ CREATE TABLE `test_table` (
                           test_id varchar(255),
                           PRIMARY KEY (test_seq)
 );
-DROP TABLE IF EXISTS user;
-CREATE TABLE IF NOT EXISTS user (
+DROP TABLE IF EXISTS user_table;
+CREATE TABLE IF NOT EXISTS user_table (
     user_id int PRIMARY KEY AUTO_INCREMENT,
     user_pw varchar(64) NOT NULL,
     user_nickname varchar(10) UNIQUE NOT NULL,

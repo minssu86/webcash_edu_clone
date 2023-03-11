@@ -16,13 +16,53 @@ import java.security.Key;
 import java.time.Duration;
 import java.util.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
 
+	private final HttpServletResponse response;
+	
     @Value("${secretKey}")
     private String ENCRYPT_KEY;
+    
+    // prefix
+    private final String ACCESS_HEADER = "Authorization";
+    private final String REFRESH_HEADER = "RefreshToken";
+    
+    // valid time
+    private final long ACCESS_VALID_TIME= 30*60*1000L; // 30분
+    private final long REFRESH_VALID_TIME = 7*24*60*60*1000L; // 1주일
 
+    
+    // access token 생성
+    public String createAccessToken(int userSeq) {
+    	Claims claims = Jwts.claims().setSubject(userSeq+"");
+    	String accessToken =  tokenProvider(claims, ACCESS_VALID_TIME);
+    	response.addHeader(ACCESS_HEADER, "Bearer "+accessToken);
+    	return accessToken;
+    }
+    
+    // refresh token 생성
+    public String createRefreshToken(int userSeq) {
+    	Claims claims = Jwts.claims().setSubject("refresh!");
+    	String refreshToken =  tokenProvider(claims, REFRESH_VALID_TIME);
+    	response.addHeader(REFRESH_HEADER, "Bearer "+refreshToken);
+    	InMemoryDBTemp.refreshTokenStorage.put(userSeq, refreshToken);
+    	return refreshToken;
+    }
+    
+    // sigup token 생성
+    public String createSigupCheckToken(String email, String code) {
+    	Map<String, String> claimMap = new HashMap<String, String>();
+    	claimMap.put("email", email);
+    	claimMap.put("code", code);
+    	Claims claims = Jwts.claims();
+    	claims.putAll(claimMap);
+    	return tokenProvider(claims, 5*60*1000L);
+    }
+    
     /**
      * 토큰 생성
      * 1. 헤더의 타입(typ)을 지정할 수 있습니다. jwt를 사용하기 때문에 Header.JWT_TYPE로 사용해줍니다.
@@ -32,17 +72,14 @@ public class JwtUtil {
      * 5. 비공개 클레임을 설정할 수 있습니다. (key-value)
      * 6. 해싱 알고리즘과 시크릿 키를 설정할 수 있습니다.
      */
-    public String makeJwtToken(String email, String code){
+    public String tokenProvider(Claims claims, long validTime){
         Key key = Keys.hmacShaKeyFor(ENCRYPT_KEY.getBytes());
         Date now = new Date();
         return Jwts.builder()
-                .setSubject("singup_code")
                 .setHeaderParam("typ", "JWT") // 1
-                .setIssuer("singup") // 2
                 .setIssuedAt(now) // 3
-                .setExpiration(new Date(now.getTime()+ Duration.ofMinutes(5).toMillis())) // 4
-                .claim("email",email) // 5
-                .claim("code",code) // 5
+                .setExpiration(new Date(now.getTime()+ validTime)) // 4
+                .setClaims(claims)
                 .signWith(key, SignatureAlgorithm.HS256) // 6
                 .compact();
     }
@@ -62,6 +99,7 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
+    
 
 
 }

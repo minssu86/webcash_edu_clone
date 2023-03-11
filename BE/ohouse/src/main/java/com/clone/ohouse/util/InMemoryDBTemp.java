@@ -6,7 +6,8 @@ import java.util.Map;
 
 public class InMemoryDBTemp {
 
-    public static Map<String, String> checkCode = new HashMap<>();
-    public static Map<String, String> signupToken = new HashMap<>();
+    public static Map<String, String> checkCodeStorage = new HashMap<>();
+    public static Map<String, String> signupTokenStorage = new HashMap<>();
+    public static Map<Integer, String> refreshTokenStorage= new HashMap<>();
 
 }

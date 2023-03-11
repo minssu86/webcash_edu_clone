@@ -4,6 +4,9 @@ import com.clone.ohouse.dto.UserRequestDto;
 import com.clone.ohouse.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.security.NoSuchAlgorithmException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,14 +30,20 @@ public class UserController {
 
     // 인증 코드 확인
     @PostMapping(path = "code-check")
-    public ResponseEntity<?> doConfirmCheckCode(@RequestBody UserRequestDto.CheckCode checkCode){
-        return userService.doConfirmCheckCode(checkCode);
+    public ResponseEntity<?> doConfirmCheckCode(@RequestBody UserRequestDto.CheckCode checkCodeDto){
+        return userService.doConfirmCheckCode(checkCodeDto);
     }
 
     // 회원 가입
     @PostMapping(path = "signup")
-    public ResponseEntity<?> addNewUserInfo(@RequestBody UserRequestDto.signup signup){
-        return userService.addNewUserInfo(signup);
+    public ResponseEntity<?> addNewUserInfo(@RequestBody UserRequestDto.signup signupDto) throws NoSuchAlgorithmException{
+        return userService.addNewUserInfo(signupDto);
+    }
+    
+    // 로그인
+    @PostMapping(path ="signin")
+    public ResponseEntity<?> signin(@RequestBody UserRequestDto.signin signinDto) throws NoSuchAlgorithmException{
+    	return userService.signin(signinDto);
     }
 
 }

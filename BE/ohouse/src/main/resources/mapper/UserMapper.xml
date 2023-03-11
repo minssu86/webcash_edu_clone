@@ -3,7 +3,7 @@
 <mapper namespace="com.clone.ohouse.mapper.UserMapper">
 
     <insert id="saveNewUserInfo" parameterType="User" useGeneratedKeys="true">
-        insert into user (user_pw, user_nickname, user_email)
+        insert into user_table (user_pw, user_nickname, user_email)
         values(
                #{userPw},
                #{userNickname},

@@ -10,6 +10,11 @@ import java.util.List;
 public interface UserMapper {
     int saveNewUserInfo(User user);
 
-    @Select("select * from user where user_email = #{email}")
-    List<User> findByEmail(String email);
+//    @Select("select * from user_table where user_email = #{email}")
+//    List<User> findOneByEmail(String email);
+    
+
+    @Select("select * from user_table where user_email = #{email}")
+    User findOneByEmail(String email);
+
 }
